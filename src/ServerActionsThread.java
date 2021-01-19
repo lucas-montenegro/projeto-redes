@@ -18,11 +18,9 @@ public class ServerActionsThread implements Runnable {
 		BufferedReader inFromClient;
 		DataOutputStream outToClient;
 		try {
-			inFromClient = new BufferedReader(new InputStreamReader(
-					connectionSocket.getInputStream()));
+			inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 
-			outToClient = new DataOutputStream(
-					connectionSocket.getOutputStream());
+			outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
 			clientSentence = inFromClient.readLine();
 			capitalizedSentence = clientSentence.toUpperCase() + '\n';
