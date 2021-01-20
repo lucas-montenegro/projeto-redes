@@ -1,5 +1,8 @@
+import netscape.javascript.JSObject;
+
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 class Client {
 
@@ -13,14 +16,14 @@ class Client {
 
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-
 		System.out.println("Cliente iniciado. Segue os formatos dos comandos:");
 		System.out.println("ADD#Parametro1#Parametro2");
 		System.out.println("CHANGE#Parametro1#Parametro2");
 		System.out.println("REMOVE#Parametro1");
 		System.out.println("SHOW");
 		System.out.println("QUIT");
-		
+
+		Scanner scanner = new Scanner(System.in);
 
 		while(!closeConnection) {
 			System.out.println("Digite um comando:");
