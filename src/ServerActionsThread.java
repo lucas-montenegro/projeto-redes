@@ -15,6 +15,7 @@ public class ServerActionsThread implements Runnable {
 	public void run() {
 		String clientSentence;
 		String capitalizedSentence;
+		boolean connected = true;
 
 		BufferedReader inFromClient;
 		DataOutputStream outToClient;
@@ -24,8 +25,9 @@ public class ServerActionsThread implements Runnable {
 		routes.add("CHANGE");
 		routes.add("REMOVE");
 		routes.add("SHOW");
+		routes.add("QUIT");
 
-		while (true)
+		while (connected)
 		{
 			try {
 				inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
@@ -36,14 +38,29 @@ public class ServerActionsThread implements Runnable {
 
 				String[] request = clientSentence.split("#", 2);
 
-				if(routes.get(0).equals(request[0]))
+				if(routes.get(0).equals(request[0])) {
+					// do something
 					System.out.println("Método: " + request[0] + ", Parâmetros: " + request[1]);
-				else if(routes.get(1).equals(request[0]))
+				}
+				else if(routes.get(1).equals(request[0])) {
+					// do something
 					System.out.println("Método: " + request[0] + ", Parâmetros: " + request[1]);
-				else if(routes.get(2).equals(request[0]))
+				}
+				else if(routes.get(2).equals(request[0])) {
+					// do something
 					System.out.println("Método: " + request[0] + ", Parâmetros: " + request[1]);
-				else if(routes.get(3).equals(request[0]))
+				}
+				else if(routes.get(3).equals(request[0])) {
+					// do something
 					System.out.println("Método: " + request[0]);
+				}
+				else if(routes.get(4).equals(request[0])) {
+					connected = false; // ends connection
+					System.out.println("Método: " + request[0]);
+				}
+				else {
+					System.out.println("Comando Inválido");
+				}
 
 				capitalizedSentence = clientSentence.toUpperCase() + '\n';
 
