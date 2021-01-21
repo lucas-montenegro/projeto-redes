@@ -71,7 +71,7 @@ class Client {
 
 			serverAnswer = inFromServer.readLine();
 
-			System.out.println("Resposta do servidor: " + serverAnswer);	
+			System.out.println("Resposta do servidor:\n" + serverAnswer);
 		}
 
 		clientSocket.close();

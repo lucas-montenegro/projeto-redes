@@ -13,7 +13,7 @@ class Server {
 
 		while (true) {
 			Socket connectionSocket = serverSocket.accept();
-			Thread t = new Thread(new ServerActionsThread(connectionSocket));
+			ServerActionsThread t = new ServerActionsThread(connectionSocket);
 			t.start();
 		}
 	}

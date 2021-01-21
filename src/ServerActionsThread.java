@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ServerActionsThread implements Runnable {
+public class ServerActionsThread extends Thread {
 
 	private Socket connectionSocket;
 
@@ -13,9 +13,11 @@ public class ServerActionsThread implements Runnable {
 	}
 
 	public void run() {
-		String clientSentence;
-		String capitalizedSentence;
+		System.out.println("Conexão iniciada com " + this.connectionSocket);
+		String clientSentence, serverSentence = "", command, parameter1, parameter2;
 		boolean connected = true;
+
+		ServerFunctionalities serverFunctionalities = new ServerFunctionalities();
 
 		BufferedReader inFromClient;
 		DataOutputStream outToClient;
@@ -36,40 +38,46 @@ public class ServerActionsThread implements Runnable {
 
 				clientSentence = inFromClient.readLine();
 
-				String[] request = clientSentence.split("#", 2);
+				String[] request = clientSentence.split("#", 3);
 
-				if(routes.get(0).equals(request[0])) {
-					// do something
-					System.out.println("Método: " + request[0] + ", Parâmetros: " + request[1]);
+				command = request[0];
+
+				if(routes.get(0).equals(command)) {
+					parameter1 = request[1];
+					parameter2 = request[2];
+
+					serverSentence = serverFunctionalities.addTask(parameter1, parameter2);
 				}
-				else if(routes.get(1).equals(request[0])) {
+				else if(routes.get(1).equals(command)) {
+					parameter1 = request[1];
+					parameter2 = request[2];
 					// do something
-					System.out.println("Método: " + request[0] + ", Parâmetros: " + request[1]);
+
 				}
-				else if(routes.get(2).equals(request[0])) {
+				else if(routes.get(2).equals(command)) {
+					parameter1 = request[1];
 					// do something
-					System.out.println("Método: " + request[0] + ", Parâmetros: " + request[1]);
+
 				}
-				else if(routes.get(3).equals(request[0])) {
+				else if(routes.get(3).equals(command)) {
 					// do something
-					System.out.println("Método: " + request[0]);
+
 				}
-				else if(routes.get(4).equals(request[0])) {
+				else if(routes.get(4).equals(command)) {
 					connected = false; // ends connection
-					System.out.println("Método: " + request[0]);
+					// do something
 				}
 				else {
+					// do something
 					System.out.println("Comando Inválido");
 				}
 
-				capitalizedSentence = clientSentence.toUpperCase() + '\n';
-
-				outToClient.writeBytes(capitalizedSentence);
+				outToClient.writeBytes(serverSentence + "\n");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
+		System.out.println("Conexão encerrada com " + this.connectionSocket);
 	}
 
 }
