@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class ServerActionsThread extends Thread {
 
 	private Socket connectionSocket;
+	private Protocol protocol;
 
 	public ServerActionsThread(Socket s) {
 		this.connectionSocket = s;
@@ -39,19 +40,23 @@ public class ServerActionsThread extends Thread {
 				clientSentence = inFromClient.readLine();
 
 				String[] request = clientSentence.split("#", 3);
+				String response;
 
 				command = request[0];
 
 				if(routes.get(0).equals(command)) {
-					parameter1 = request[1];
-					parameter2 = request[2];
+					response = protocol.add(request);
 
-					serverSentence = serverFunctionalities.addTask(parameter1, parameter2);
+					if (response != null)
+						serverSentence = response;
+					else
+						serverSentence = serverFunctionalities.addTask(request[1], request[2]);
 				}
 				else if(routes.get(1).equals(command)) {
 					parameter1 = request[1];
 					parameter2 = request[2];
 					// do something
+
 
 				}
 				else if(routes.get(2).equals(command)) {
