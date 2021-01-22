@@ -50,7 +50,7 @@ public class ServerActionsThread extends Thread {
 					if (response != null)
 						serverSentence = response;
 					else
-						serverSentence = serverFunctionalities.addTask(request[1], request[2]);
+						serverSentence = serverFunctionalities.AddTask(request[1], request[2]);
 				}
 				else if(routes.get(1).equals(command)) {
 					response = protocol.change(request);
@@ -58,34 +58,33 @@ public class ServerActionsThread extends Thread {
 					if (response != null)
 						serverSentence = response;
 					else 
-						serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]);
+						serverSentence = serverFunctionalities.ChangeTaskPriority(request[1], request[2]);
 				}
 				else if(routes.get(2).equals(command)) {
 					response = protocol.remove(request);
 
 					if (response != null)
 						serverSentence = response;
-					//else
-						// TODO serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]);
+					else
+						serverSentence = serverFunctionalities.RemoveTask(request[1]);
 
 				}
 				else if(routes.get(3).equals(command)) {
-					response = protocol.change(request); // TODO
+					response = null; // TODO protocol.change(request);
 
 					if (response != null)
 						serverSentence = response;
-					//else
-						// TODO serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]); 
-
+					else
+						serverSentence = serverFunctionalities.ShowTaskList();
 				}
 				else if(routes.get(4).equals(command)) {
-					response = protocol.change(request); // TODO
+					response = null; // TODO protocol.change(request);
 					connected = false; // ends connection
 					
 					if (response != null)
 						serverSentence = response;
-					//else
-						// TODO serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]);
+					else
+						serverSentence = serverFunctionalities.Quit();
 				}
 				else {
 					// TODO response = protocol.change(request);
