@@ -15,7 +15,7 @@ public class ServerActionsThread extends Thread {
 
 	public void run() {
 		System.out.println("Conexão iniciada com " + this.connectionSocket);
-		String clientSentence, serverSentence = "", command, parameter1, parameter2;
+		String clientSentence, serverSentence = "", command;
 		boolean connected = true;
 
 		ServerFunctionalities serverFunctionalities = new ServerFunctionalities();
@@ -53,28 +53,42 @@ public class ServerActionsThread extends Thread {
 						serverSentence = serverFunctionalities.addTask(request[1], request[2]);
 				}
 				else if(routes.get(1).equals(command)) {
-					parameter1 = request[1];
-					parameter2 = request[2];
-					// do something
+					response = protocol.change(request);
 
-
+					if (response != null)
+						serverSentence = response;
+					else 
+						serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]);
 				}
 				else if(routes.get(2).equals(command)) {
-					parameter1 = request[1];
-					// do something
+					response = protocol.remove(request);
+
+					if (response != null)
+						serverSentence = response;
+					//else
+						// TODO serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]);
 
 				}
 				else if(routes.get(3).equals(command)) {
-					// do something
+					response = protocol.change(request); // TODO
+
+					if (response != null)
+						serverSentence = response;
+					//else
+						// TODO serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]); 
 
 				}
 				else if(routes.get(4).equals(command)) {
+					response = protocol.change(request); // TODO
 					connected = false; // ends connection
-					// do something
+					
+					if (response != null)
+						serverSentence = response;
+					//else
+						// TODO serverSentence = serverFunctionalities.changeTaskPriority(request[1], request[2]);
 				}
 				else {
-					// do something
-					System.out.println("Comando Inválido");
+					// TODO response = protocol.change(request);
 				}
 
 				outToClient.writeBytes(serverSentence + "\n");
