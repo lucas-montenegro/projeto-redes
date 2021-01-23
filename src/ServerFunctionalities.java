@@ -8,6 +8,10 @@ public class ServerFunctionalities {
         this.taskList = new ArrayList <Pair <String,Integer> > (); // initializing  taskList
     }
 
+    public int GetTaskListSize() {
+        return this.taskList.size();
+    }
+
     public void Sort() {
         int i, j; // iterators
         int n = this.taskList.size(); // taskList size
@@ -52,9 +56,11 @@ public class ServerFunctionalities {
 
     public String RemoveTask(String taskToRemovePosition) {
         int taskToRemovePositionToInteger = Integer.parseInt(taskToRemovePosition); // parse taskToRemovePosition to int
-        this.taskList.remove(taskToRemovePositionToInteger); // remove the task
+
         String taskName = this.taskList.get(taskToRemovePositionToInteger).getKey(); // gets the name of the task to remove
         int taskPriority = this.taskList.get(taskToRemovePositionToInteger).getValue(); // gets the priority of the task to remove
+
+        this.taskList.remove(taskToRemovePositionToInteger); // remove the task
 
         return "Tarefa (Nome: " + taskName + ", Prioridade: " + taskPriority + ") removida com sucesso!";
     }
@@ -62,6 +68,10 @@ public class ServerFunctionalities {
     public String ShowTaskList() {
         String list = "";
         int i, n = this.taskList.size();
+
+        if(n == 0) {
+            return "Lista de tarefas vazia";
+        }
 
         for(i = 0; i < n; i++) {
             list += "Posicao: " + i + " -> " +

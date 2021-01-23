@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ServerActionsThread extends Thread {
 
 	private Socket connectionSocket;
-	private Protocol protocol;
+	private Protocol protocol = new Protocol();
 
 	public ServerActionsThread(Socket s) {
 		this.connectionSocket = s;
@@ -16,6 +16,7 @@ public class ServerActionsThread extends Thread {
 	public void run() {
 		System.out.println("Conexão iniciada com " + this.connectionSocket);
 		String clientSentence, serverSentence = "", command;
+		int taskListSize;
 		boolean connected = true;
 
 		ServerFunctionalities serverFunctionalities = new ServerFunctionalities();
@@ -47,47 +48,50 @@ public class ServerActionsThread extends Thread {
 				if(routes.get(0).equals(command)) {
 					response = protocol.add(request);
 
-					if (response != null)
+					if (response != null) {
 						serverSentence = response;
-					else
-						serverSentence = serverFunctionalities.AddTask(request[1], request[2]);
+					}
+					else {
+						serverSentence = protocol.ValidMessage();
+						serverSentence += "#" + serverFunctionalities.AddTask(request[1], request[2]);
+					}
 				}
 				else if(routes.get(1).equals(command)) {
-					response = protocol.change(request);
+					taskListSize = serverFunctionalities.GetTaskListSize();
+					response = protocol.change(request, taskListSize);
 
-					if (response != null)
+					if (response != null) {
 						serverSentence = response;
-					else 
-						serverSentence = serverFunctionalities.ChangeTaskPriority(request[1], request[2]);
+					}
+					else {
+						serverSentence = protocol.ValidMessage();
+						serverSentence += "#" + serverFunctionalities.ChangeTaskPriority(request[1], request[2]);
+					}
 				}
 				else if(routes.get(2).equals(command)) {
-					response = protocol.remove(request);
+					taskListSize = serverFunctionalities.GetTaskListSize();
+					response = protocol.remove(request, taskListSize);
 
-					if (response != null)
+					if (response != null) {
 						serverSentence = response;
-					else
-						serverSentence = serverFunctionalities.RemoveTask(request[1]);
+					}
+					else {
+						serverSentence = protocol.ValidMessage();
+						serverSentence += "#" + serverFunctionalities.RemoveTask(request[1]);
+					}
 
 				}
 				else if(routes.get(3).equals(command)) {
-					response = null; // TODO protocol.change(request);
-
-					if (response != null)
-						serverSentence = response;
-					else
-						serverSentence = serverFunctionalities.ShowTaskList();
+					serverSentence = protocol.ValidMessage();
+					serverSentence += "#" + serverFunctionalities.ShowTaskList();
 				}
 				else if(routes.get(4).equals(command)) {
-					response = null; // TODO protocol.change(request);
 					connected = false; // ends connection
-					
-					if (response != null)
-						serverSentence = response;
-					else
-						serverSentence = serverFunctionalities.Quit();
+					serverSentence = protocol.ValidMessage();
+					serverSentence += "#" + serverFunctionalities.Quit();
 				}
 				else {
-					// TODO response = protocol.change(request);
+					serverSentence = protocol.InvalidCommand();
 				}
 
 				outToClient.writeBytes(serverSentence + "\n");
@@ -97,5 +101,4 @@ public class ServerActionsThread extends Thread {
 		}
 		System.out.println("Conexão encerrada com " + this.connectionSocket);
 	}
-
 }
