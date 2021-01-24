@@ -48,3 +48,5 @@ Para executar a aplicação servidor vá para a pasta *class* e execute o seguin
 ```
 java Server
 ```
+## Extensões necessárias
+* Javafx SDK
