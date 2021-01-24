@@ -10,23 +10,32 @@ class Client {
 		String clientCommand, clientParameter1, clientParameter2, clientMesssage = "", serverResponse;
 		boolean connected = true;
 		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-	
-		Socket clientSocket = new Socket("localhost", 6789);
+		DataOutputStream outToServer = null;
+		BufferedReader inFromServer = null;
+		Socket clientSocket = null;
 
-		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+		try {
+			clientSocket = new Socket("localhost", 7000);
 
-		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			outToServer = new DataOutputStream(clientSocket.getOutputStream());
 
-		// Manual about the functions
-		System.out.println("Cliente iniciado. Segue os comandos:");
-		System.out.println("ADD -> Adiciona uma tarefa com prioridade a lista de tarefas");
-		System.out.println("CHANGE -> Altera a prioridade de uma tarefa da lista");
-		System.out.println("REMOVE -> Remove uma tarefa da lsita");
-		System.out.println("SHOW -> Mosta a lista de tarefas ordenadas de acordo com a prioridade");
-		System.out.println("QUIT -> Desconecta do servidor");
+			inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		}catch (Exception e){
+			connected = false;
+			System.out.println("Impossível conectar a um servidor!");
+		}
+
 
 		while(connected) {
+			// Manual about the functions
+			System.out.println("Cliente iniciado. Segue os comandos:");
+			System.out.println("ADD -> Adiciona uma tarefa com prioridade a lista de tarefas");
+			System.out.println("CHANGE -> Altera a prioridade de uma tarefa da lista");
+			System.out.println("REMOVE -> Remove uma tarefa da lsita");
+			System.out.println("SHOW -> Mosta a lista de tarefas ordenadas de acordo com a prioridade");
+			System.out.println("QUIT -> Desconecta do servidor");
 			System.out.println("Digite um comando:");
+
 			clientCommand = inFromUser.readLine();
 			clientCommand = clientCommand.replace('#', '@');
 			clientCommand = clientCommand.toUpperCase(); // changing to upper case just to padronize
@@ -66,20 +75,27 @@ class Client {
 			else if(clientCommand.equals("QUIT")) {
 				clientMesssage = clientCommand;
 				connected = false;
-			}	
+			}
 			else {
 				clientMesssage = clientCommand;
 			}
 
-			outToServer.writeBytes(clientMesssage + '\n');
+			try{
+				outToServer.writeBytes(clientMesssage + '\n');
 
-			serverResponse = inFromServer.readLine();
+				serverResponse = inFromServer.readLine();
 
-			serverResponse = protocol.TranslateResponseMessage(serverResponse);
+				serverResponse = protocol.TranslateResponseMessage(serverResponse);
+			}catch(Exception e){
+				System.out.println("Conexão com o servidor perdida!");
+				break;
+			}
 
 			System.out.printf("Resposta do servidor:\n" + serverResponse);
 		}
 
-		clientSocket.close();
+		if (clientSocket != null)
+			clientSocket.close();
+
 	}
 }

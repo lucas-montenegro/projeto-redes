@@ -31,7 +31,7 @@ public class ServerActionsThread extends Thread {
 		routes.add("SHOW");
 		routes.add("QUIT");
 
-		while (connected)
+		while (connected && !connectionSocket.isClosed())
 		{
 			try {
 				inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
@@ -39,6 +39,9 @@ public class ServerActionsThread extends Thread {
 				outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
 				clientSentence = inFromClient.readLine();
+
+				if (clientSentence == null)
+					break;
 
 				String[] request = clientSentence.split("#", 3);
 				String response;
@@ -83,6 +86,7 @@ public class ServerActionsThread extends Thread {
 				}
 				else if(routes.get(3).equals(command)) {
 					serverSentence = protocol.ValidMessage();
+					connectionSocket.close();
 					serverSentence += "#" + serverFunctionalities.ShowTaskList();
 				}
 				else if(routes.get(4).equals(command)) {
@@ -96,7 +100,8 @@ public class ServerActionsThread extends Thread {
 
 				outToClient.writeBytes(serverSentence + "\n");
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("Conexão encerrada com " + this.connectionSocket);
+//				e.printStackTrace();
 			}
 		}
 		System.out.println("Conexão encerrada com " + this.connectionSocket);
