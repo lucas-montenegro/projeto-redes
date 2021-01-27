@@ -86,7 +86,6 @@ public class ServerActionsThread extends Thread {
 				}
 				else if(routes.get(3).equals(command)) {
 					serverSentence = protocol.ValidMessage();
-					connectionSocket.close();
 					serverSentence += "#" + serverFunctionalities.ShowTaskList();
 				}
 				else if(routes.get(4).equals(command)) {
@@ -100,10 +99,12 @@ public class ServerActionsThread extends Thread {
 
 				outToClient.writeBytes(serverSentence + "\n");
 			} catch (Exception e) {
-				System.out.println("Conexão encerrada com " + this.connectionSocket);
-//				e.printStackTrace();
+				System.out.println("Cliente forçou o encerramento da conexão");
+				connected = false;
+				//e.printStackTrace();
 			}
 		}
+
 		System.out.println("Conexão encerrada com " + this.connectionSocket);
 	}
 }
