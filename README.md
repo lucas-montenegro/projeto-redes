@@ -32,6 +32,8 @@ Encerra a conexão do cliente com o servidor.
 
 ## Execução
 
+Foi utilizado o IntelliJ IDEA para construir e executar o projeto. Segue nas linhas abaixo, os comandos para executar o cliente e o servidor.
+
 ### Cliente
 Para executar a aplicação cliente vá para a pasta *out/production/projeto-redes* e execute o seguinte comando:
 ```
